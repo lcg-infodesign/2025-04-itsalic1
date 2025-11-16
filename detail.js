@@ -49,6 +49,13 @@ function setup() {
       break;
     }
   }
+
+  // link per ritornare alla mappa
+  link = createA("index.html", "←", "_self");
+  link.style("font-family", "Arial");
+  link.style("font-size", "16px");
+  link.style("color", "white");
+  link.style("text-decoration", "none");
 }
 
 /* se selected ESISTE - si va a recuperare il valore che, con typeColor, 
@@ -153,8 +160,16 @@ if (status != null && status.trim() !== "") {
   text("Status: Not available", x + 50, 500);
 }
 
+// necessario per tooltip che appare al passaggio del mouse
+function mouseMoved() {
+  redraw();
+}
+
 // disegna la barra visiva legata all'attività del vulcano all'interno della card
 drawEruptionBar(x + w - 250, y + 150);
+
+// posizione del link per la mappa
+link.position(x + 50, y + 40);
 }
 
 // definisce la funzione per associare colore specifico / categoria di vulcano
