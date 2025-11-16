@@ -166,7 +166,7 @@ function mouseMoved() {
 }
 
 // disegna la barra visiva legata all'attività del vulcano all'interno della card
-drawEruptionBar(x + w - 250, y + 150);
+drawEruptionBar(x + w - 250, y + 135);
 
 // posizione del link per la mappa
 link.position(x + 50, y + 40);
