@@ -39,7 +39,7 @@ function setup() {
   }
 
   let backLink = createA("index.html", "←", "_self");
-  backLink.position(445, 140); // posizione sullo schermo (x, y)
+  backLink.position(465, 140); // posizione sullo schermo (x, y)
   backLink.style ("font-family", "Arial")
   backLink.style("font-size", "20px");
   backLink.style("color", "white");
@@ -47,17 +47,19 @@ function setup() {
 
 }
 
-
 function draw() {
-  background(30);
   if (selected) {
+    let typeColor = getTypeColor(selected.get("TypeCategory"));
+    background(typeColor); // sfondo dinamico in base alla tipologia
     drawCard();
+  } else {
+    background(30); // fallback se nessun vulcano è selezionato
   }
 }
 
 function drawCard() {
   let w = 700;
-  let h = 500;
+  let h = 550;
   let x = (width - w) / 2;
   let y = (height - h) / 2;
 
@@ -70,71 +72,92 @@ function drawCard() {
   fill(255);
 
   textSize(12);
-  text("ID: " + selected.get("Volcano Number"), x + 30, y + 75);
+  let volcanoID = selected.get("Volcano Number");
+  if (volcanoID) {
+  text("ID: " + volcanoID, x + 50, y + 100);
+} else {
+  text("ID: Not available", x + 50, y + 100);
+}
 
   let typeColor = getTypeColor(selected.get("TypeCategory"));
   fill(typeColor);
-  rect(x + 30, 290, 160, 28, 6);
+  rect(x + 50, 300, 160, 28, 6);
   fill(255);
   textSize(14);
   textAlign(CENTER, CENTER);
-  text(selected.get("TypeCategory"), x + 110, 304);
+  text(selected.get("TypeCategory"), x + 130, 315);
   textAlign(LEFT, BASELINE);
 
   textSize(30);
   fill(255);
-  text(selected.get("Volcano Name"), x + 30, 235);
+  text(selected.get("Volcano Name"), x + 50, 235);
 
   textSize(14);
-  text("Lat: " + selected.get("Latitude") + " | Lon: " + selected.get("Longitude"), x + 30, 265);
+  text("Lat: " + selected.get("Latitude") + " | Lon: " + selected.get("Longitude"), x + 50, 275);
 
   textSize(16);
-  text("📍 " + selected.get("Location") + ", " + selected.get("Country"), x + 30, 365);
-  text("📏 " + selected.get("Elevation (m)") + " m", x + 30, 400);
-  text("Last Known Eruption: " + selected.get("Last Known Eruption"), x + 30, 490);
+  text("📍 " + selected.get("Location") + ", " + selected.get("Country"), x + 50, 390);
+  text("📏 " + selected.get("Elevation (m)") + " m", x + 50, 430);
+  text("Last Known Eruption: " + selected.get("Last Known Eruption"), x + 50, 540);
 
-  let status = selected.get("Status");
-  if (status && status.trim() !== "" && status.toLowerCase() !== "nan") {
-    text("Status:  " + status, x + 30, 450);
+let status = selected.get("Status");
 
-    // Icona informativa accanto allo status
-    let iconX = x + 250;
-    let iconY = 433;
-    let iconSize = 20;
-    image(infoIcon, iconX, iconY, iconSize, iconSize);
+if (status != null && status.trim() !== "") {
+  textSize(16);
+  textFont("Arial"); // Assicurati che sia lo stesso font usato per textWidth
+  let statusText = "Status: " + status;
+  text(statusText, x + 50, 500);
 
-    // Tooltip al passaggio del mouse
-    let mouseOverIcon = dist(mouseX, mouseY, iconX + iconSize / 2, iconY + iconSize / 2) < iconSize / 2;
-    if (mouseOverIcon) {
-      let explanation = getStatusExplanation(status);
-      let tw = textWidth(explanation) + 20;
-      let th = 40;
-      let tx = iconX + 20;
-      let ty = iconY - 10;
+  // Calcola larghezza del testo
+  let textW = textWidth(statusText);
+  let iconSize = 20;
+  let iconX = x + 50 + textW + 10;
+  let iconY = 483;
 
-      fill(0, 200);
-      stroke(255);
-      rect(tx, ty, tw - 40, th, 5);
+  image(infoIcon, iconX, iconY, iconSize, iconSize);
 
-      noStroke();
-      fill(255);
-      textSize(12);
-      text(explanation, tx + 10, ty + 12, tw - 20, th - 10);
-    }
-  } else {
-    text("Status: Not available", x + 30, 450);
+  // Tooltip al passaggio del mouse
+  let mouseOverIcon = dist(mouseX, mouseY, iconX + iconSize / 2, iconY + iconSize / 2) < iconSize / 2;
+  if (mouseOverIcon) {
+    let explanation = getStatusExplanation(status);
+    let tw = 180; 
+    let th = 50; 
+    let tx = iconX + 20;
+    let ty = iconY - 10;
+    
+    fill(0, 200);
+    stroke(255);
+    rect(tx, ty, tw, th, 5);
+    
+    noStroke();
+    fill(255);
+    textSize(12);
+    textAlign(LEFT, TOP);
+    text(explanation, tx + 10, ty + 10, tw - 20, th - 20);
   }
-
+} else {
+  textSize(16);
+  textFont("Arial");
+  text("Status: Not available", x + 50, 500);
 }
 
-function mousePressed() {
-  let x = (width - 600) / 2;
-  let iconX = x + 200;
-  let iconY = 388;
-  let iconSize = 20;
+drawEruptionBar(x + w - 250, y + 150);
+}
 
+
+function mousePressed() {
+  let x = (width - 700) / 2;
   let status = selected.get("Status");
-  if (status && status.trim() !== "" && status.toLowerCase() !== "nan") {
+
+  if (status != null && status.trim() !== "") {
+    textSize(12);
+    textFont("Arial");
+    let statusText = "Status: " + status;
+    let textW = textWidth(statusText);
+    let iconSize = 20;
+    let iconX = x + 30 + textW + 10;
+    let iconY = 433;
+
     let clickedIcon = dist(mouseX, mouseY, iconX + iconSize / 2, iconY + iconSize / 2) < iconSize / 2;
     if (clickedIcon) {
       let explanation = getStatusExplanation(status);
@@ -159,16 +182,16 @@ function getTypeColor(type) {
 function getStatusExplanation(status) {
   status = status.toLowerCase();
   if (status === "historical") {
-    return "Eruptions documented during / shortly after observation.";
+    return "Eruptions documented during / after observation.";
   }
-  if (["hydrophonic", "radiocarbon", "anthropology", "ar/ar", "dendrochronology", "hydration rind", "ice core", "k-ar", "lichenometry", "magnetism", "seismicity", "tephrochronological", "varve count?"].includes(status)) {
+  if (["hydrophonic", "radiocarbon", "anthropology", "ar/ar", "dendrochronology", "hydration rind", "ice core", "k-ar", "lichenometry", "magnetism", "seismicity", "tephrochronology", "varve count?"].includes(status)) {
     return "Dated eruptions, based on scientific techniques.";
   }
   if (["fumarolic", "hot springs"].includes(status)) {
     return "Dated eruptions, based on thermal features.";
   }
   if (["pleistocene", "pleistocene-fumarol"].includes(status)) {
-    return "Pleistocene thermal features: preceded by the word Pleistocene.";
+    return "Pleistocene thermal features";
   }
   if (["uncertain", "holocene?"].includes(status)) {
     return "Low certainty of Holocene volcanism.";
@@ -180,4 +203,46 @@ function getStatusExplanation(status) {
 
 function mouseMoved() {
   redraw();
+}
+
+function drawEruptionBar(x, y) {
+  let labels = [
+    { code: "?", label: "? - Unknown" },
+    { code: "D", label: "D - Dated in A.D (generic)" },
+    { code: "D1", label: "D1 - 1964 or after" },
+    { code: "D2", label: "D2 - 1900 / 1963" },
+    { code: "D3", label: "D3 - 1800 / 1899" },
+    { code: "D4", label: "D4 - 1700 / 1799" },
+    { code: "D5", label: "D5 - 1500 / 1699" },
+    { code: "D6", label: "D6 - A.D 1 / 1499" },
+    { code: "D7", label: "D7 - B.C Holocene" },
+    { code: "P", label: "P - Pleistocene" },
+    { code: "Q", label: "Q - Quaternary eruptions" },
+    { code: "U", label: "U - Undated" },
+    { code: "UNKNOWN", label: "Unknown - Not reported" }
+  ];
+
+  let activeCode = selected.get("Last Known Eruption");
+  if (activeCode) activeCode = activeCode.trim().toUpperCase();
+  else activeCode = "";
+
+  let bandWidth = 30;
+  let bandHeight = 24;
+
+  for (let i = 0; i < labels.length; i++) {
+    let bandY = y + i * bandHeight;
+
+    // Colore: rosso se attivo, grigio altrimenti
+    fill(labels[i].code === activeCode ? color(255, 255, 255) : color(100));
+    noStroke();
+    rect(x, bandY, bandWidth, bandHeight);
+
+    // Etichetta accanto
+    fill(255);
+    textSize(12);
+    textAlign(LEFT, CENTER);
+    text(labels[i].label, x + bandWidth + 10, bandY + bandHeight / 2);
+  }
+
+  textAlign(LEFT, BASELINE);
 }
