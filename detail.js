@@ -49,14 +49,6 @@ function setup() {
       break;
     }
   }
-
-  // creazione di un link per ritornare alla mappa principale (index)
-  let link = createA("index.html", "←", "_self");
-  link.position(465, 140);
-  link.style("font-size", "20px");
-  link.style("color", "white");
-  link.style("text-decoration", "none");
-
 }
 
 /* se selected ESISTE - si va a recuperare il valore che, con typeColor, 
@@ -90,9 +82,9 @@ function drawCard() {
   textSize(12);
   let volcanoID = selected.get("Volcano Number");
   if (volcanoID) {
-  text("ID: " + volcanoID, x + 50, y + 170);
+  text("ID: " + volcanoID, x + 50, y + 100);
 } else {
-  text("ID: Not available", x + 50, y + 170);
+  text("ID: Not available", x + 50, y + 100);
 }
 /* necessario per disegnare etichetta con tipologia vulcano
 - recupera la categoria, usa getTypeColor per ottenere il colore associato
