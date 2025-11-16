@@ -1137,7 +1137,7 @@ Volcano Number,Volcano Name,Country,Location,Latitude,Longitude,Elevation (m),Ty
 284220,Forecast Seamount,United States,Mariana Is-C Pacific,13.4,143.92,-1456,Submarine volcano,Submarine Volcano,Fumarolic,U
 284190,Guguan,United States,Mariana Is-C Pacific,17.307,145.845,287,Stratovolcano,Stratovolcano,Historical,D3
 284135,Kasuga 2,United States,Mariana Is-C Pacific,21.6,143.637,-274,Submarine volcano,Submarine Volcano,Uncertain,Unknown
-284305,Mariana Back-Arc Segment at 15.5°N,United States,Mariana Is-C Pacific,15.406,144.506,-4100,Submarine,Submarine Volcano,,D1
+284305,Mariana Back-Arc Segment,United States,Mariana Is-C Pacific,15.406,144.506,-4100,Submarine,Submarine Volcano,,D1
 284143,Maug Islands,United States,Mariana Is-C Pacific,20.02,145.22,227,Stratovolcano,Stratovolcano,Fumarolic,U
 284136,NW Eifuku,United States,Mariana Is-C Pacific,21.485,144.043,-1535,Submarine volcano,Submarine Volcano,Uncertain,Unknown
 284211,NW Rota-1,United States,Mariana Is-C Pacific,14.601,144.775,-517,Submarine volcano,Submarine Volcano,Historical,D1
@@ -1364,7 +1364,7 @@ Volcano Number,Volcano Name,Country,Location,Latitude,Longitude,Elevation (m),Ty
 282050,Kuchinoerabujima,Japan,Ryukyu Is,30.443,130.217,657,Stratovolcano,Stratovolcano,Historical,D1
 282043,Kuchinoshima,Japan,Ryukyu Is,29.968,129.926,628,Stratovolcanoes,Stratovolcano,Radiocarbon,D6
 282040,Nakanoshima,Japan,Ryukyu Is,29.859,129.857,979,Stratovolcano,Stratovolcano,Historical,D2
-282010,Submarine Volcano NNE of Iriomotejima,Japan,Ryukyu Is,24.57,123.93,-200,Submarine volcano,Submarine Volcano,Historical,D2
+282010,NNE of Iriomotejima,Japan,Ryukyu Is,24.57,123.93,-200,Submarine volcano,Submarine Volcano,Historical,D2
 282030,Suwanosejima,Japan,Ryukyu Is,29.638,129.714,796,Stratovolcano,Stratovolcano,Historical,D1
 282021,Yokoatejima,Japan,Ryukyu Is,28.797,128.997,495,Stratovolcano,Stratovolcano,Holocene,U
 244020,Tutuila,American Samoa,Samoa-SW Pacific,-14.29,-170.702,653,Tuff cone,Maars / Tuff ring,Holocene,U

@@ -1,3 +1,4 @@
+// definizione delle variabili
 let data, selected, infoIcon;
 
 function preload() {
@@ -5,6 +6,9 @@ function preload() {
   infoIcon = loadImage("assets/info_icon.png");
 }
 
+/* funzione necessaria per NORMALIZZARE il Volcano Name
+- alcuni nomi possiedono delle spaziature / simboli speciali;
+in questo modo è possibile creare collegamenti validi per tutti i vulcani  */
 function normalizeName(name) {
   return name
     .toLowerCase()
@@ -19,10 +23,16 @@ function setup() {
   createCanvas(windowWidth, windowHeight);
   textFont("Arial");
 
+  /* PREPARAZIONE DATI ESTERNI
+  estrae i parametri dalla URL, prende il parametro name e lo converte in minuscolo
+  - il medesimo discorso si applica alla latitudine (da stringa a decimale)  */
   let params = getURLParams();
-  let normalizedParam = params.name?.toLowerCase();
+  let normalizedParam = params.name && params.name.toLowerCase();
   let paramLat = parseFloat(params.lat);
 
+  /* RICERCA VULCANO CORRETTO 
+  identifica un vulcano preciso, da mostrare nella scheda, basandosi su nome e latitudine 
+  - estrae dal DATASET, normalizza nome / latitudine e confronta con la URL */
   for (let i = 0; i < data.getRowCount(); i++) {
     let volcanoName = data.getString(i, "Volcano Name");
     let normalizedName = normalizeName(volcanoName);
@@ -31,32 +41,38 @@ function setup() {
     if (
       normalizedName === normalizedParam &&
       !isNaN(paramLat) &&
+      // approssimazione minima - dato preciso per la latitudine
       Math.abs(lat - paramLat) < 0.0001
     ) {
+      // se trova una corrispondenza salva la riga i nella variabile selected
       selected = data.getRow(i);
       break;
     }
   }
 
-  let backLink = createA("index.html", "←", "_self");
-  backLink.position(465, 140); // posizione sullo schermo (x, y)
-  backLink.style ("font-family", "Arial")
-  backLink.style("font-size", "20px");
-  backLink.style("color", "white");
-  backLink.style("text-decoration", "none");
+  // creazione di un link per ritornare alla mappa principale (index)
+  let link = createA("index.html", "←", "_self");
+  link.position(465, 140);
+  link.style("font-size", "20px");
+  link.style("color", "white");
+  link.style("text-decoration", "none");
 
 }
 
+/* se selected ESISTE - si va a recuperare il valore che, con typeColor, 
+viene restituito sotto forma di background color in base alla tipologia del vulcano.
+se selected NON ESISTE - viene impostato uno sfondo nero */
 function draw() {
   if (selected) {
     let typeColor = getTypeColor(selected.get("TypeCategory"));
-    background(typeColor); // sfondo dinamico in base alla tipologia
+    background(typeColor);
     drawCard();
   } else {
-    background(30); // fallback se nessun vulcano è selezionato
+    background(30);
   }
 }
 
+// funzione per definire la card con le informazioni
 function drawCard() {
   let w = 700;
   let h = 550;
@@ -66,7 +82,7 @@ function drawCard() {
   fill(0, 180);
   stroke(255);
   strokeWeight(2);
-  rect(x, y, w, h, 12);
+  rect(x, y, w, h, 10);
 
   noStroke();
   fill(255);
@@ -74,11 +90,13 @@ function drawCard() {
   textSize(12);
   let volcanoID = selected.get("Volcano Number");
   if (volcanoID) {
-  text("ID: " + volcanoID, x + 50, y + 100);
+  text("ID: " + volcanoID, x + 50, y + 110);
 } else {
-  text("ID: Not available", x + 50, y + 100);
+  text("ID: Not available", x + 50, y + 110);
 }
-
+/* necessario per disegnare etichetta con tipologia vulcano
+- recupera la categoria, usa getTypeColor per ottenere il colore associato
+e imposta rettangolo */
   let typeColor = getTypeColor(selected.get("TypeCategory"));
   fill(typeColor);
   rect(x + 50, 300, 160, 28, 6);
@@ -100,15 +118,15 @@ function drawCard() {
   text("📏 " + selected.get("Elevation (m)") + " m", x + 50, 430);
   text("Last Known Eruption: " + selected.get("Last Known Eruption"), x + 50, 540);
 
+/* utile per visualizzare lo stato del vulcano
+- recupera il valore, verifica che non sia nullo ed imposta il testo */
 let status = selected.get("Status");
-
 if (status != null && status.trim() !== "") {
-  textSize(16);
-  textFont("Arial"); // Assicurati che sia lo stesso font usato per textWidth
+  textSize(16); 
   let statusText = "Status: " + status;
   text(statusText, x + 50, 500);
 
-  // Calcola larghezza del testo
+  // calcola la larghezza in pixel + dimensioni, in modo da posizionare subito dopo l'icona
   let textW = textWidth(statusText);
   let iconSize = 20;
   let iconX = x + 50 + textW + 10;
@@ -116,7 +134,9 @@ if (status != null && status.trim() !== "") {
 
   image(infoIcon, iconX, iconY, iconSize, iconSize);
 
-  // Tooltip al passaggio del mouse
+  /* aggiunge un tooltip informativo per chiarificare lo stato
+  - calcola la distanza tra il cursore / il centro dell'icona (raggio = metà dimensione = tooltip),
+  e recupera la spiegazione dello stato, definendone le dimensioni  */
   let mouseOverIcon = dist(mouseX, mouseY, iconX + iconSize / 2, iconY + iconSize / 2) < iconSize / 2;
   if (mouseOverIcon) {
     let explanation = getStatusExplanation(status);
@@ -135,36 +155,17 @@ if (status != null && status.trim() !== "") {
     textAlign(LEFT, TOP);
     text(explanation, tx + 10, ty + 10, tw - 20, th - 20);
   }
+  // se lo status non è disponibile - messaggio di fallback
 } else {
   textSize(16);
-  textFont("Arial");
   text("Status: Not available", x + 50, 500);
 }
 
+// disegna la barra visiva legata all'attività del vulcano all'interno della card
 drawEruptionBar(x + w - 250, y + 150);
 }
 
-
-function mousePressed() {
-  let x = (width - 700) / 2;
-  let status = selected.get("Status");
-
-  if (status != null && status.trim() !== "") {
-    textSize(12);
-    textFont("Arial");
-    let statusText = "Status: " + status;
-    let textW = textWidth(statusText);
-    let iconSize = 20;
-    let iconX = x + 30 + textW + 10;
-    let iconY = 433;
-
-    let clickedIcon = dist(mouseX, mouseY, iconX + iconSize / 2, iconY + iconSize / 2) < iconSize / 2;
-    if (clickedIcon) {
-      let explanation = getStatusExplanation(status);
-    }
-  }
-}
-
+// definisce la funzione per associare colore specifico / categoria di vulcano
 function getTypeColor(type) {
   switch (type) {
     case "Stratovolcano": return color(240, 76, 60);
@@ -179,6 +180,9 @@ function getTypeColor(type) {
   }
 }
 
+/* funzione che restituisce una spiegazione testuale in base allo stato eruttivo del vulcano 
+- converte lo stato in minuscolo e restituisce la definizione 
+(.includes mi aiuta a controllare se presente nello status) */
 function getStatusExplanation(status) {
   status = status.toLowerCase();
   if (status === "historical") {
@@ -199,12 +203,12 @@ function getStatusExplanation(status) {
   if (status === "holocene") {
     return "Confirmed activity during the Holocene epoch.";
   }
+  return "Status explanation not available.";
 }
 
-function mouseMoved() {
-  redraw();
-}
-
+/* funzione utile per disegnare la barra visiva che rappresenta la cronologia delle eruzioni
+- crea un array di oggetti con sigla che rappresenta classe temporale di eruzione (code) 
++ descrizione leggibile da mostrare per utente (label) */
 function drawEruptionBar(x, y) {
   let labels = [
     { code: "?", label: "? - Unknown" },
@@ -222,22 +226,29 @@ function drawEruptionBar(x, y) {
     { code: "UNKNOWN", label: "Unknown - Not reported" }
   ];
 
+  /* prende il valore della colonna
+  - se esiste gli spazi vengono rimossi ed il valore reso maiuscolo */
   let activeCode = selected.get("Last Known Eruption");
   if (activeCode) activeCode = activeCode.trim().toUpperCase();
+  // se assente, viene impostata stringa vuota
   else activeCode = "";
 
+  // disegna barra verticale fatta da tante "bande" delle seguenti dimensioni
   let bandWidth = 30;
   let bandHeight = 24;
 
+  /* viene disegnata una banda sotto l'altra con bandY che cambia ad ogni ciclo
+  (ciclo for rettangolo + etichetta)*/
   for (let i = 0; i < labels.length; i++) {
     let bandY = y + i * bandHeight;
 
-    // Colore: rosso se attivo, grigio altrimenti
+    /* se il codice del periodo è UGUALE a quello dell'ultima eruzione
+    disegna rettangolo bianco evidenziato, altrimenti grigio scuro */
     fill(labels[i].code === activeCode ? color(255, 255, 255) : color(100));
     noStroke();
     rect(x, bandY, bandWidth, bandHeight);
 
-    // Etichetta accanto
+    // aggiunge etichetta accanto al rettangolo, che mostra descrizione leggibile
     fill(255);
     textSize(12);
     textAlign(LEFT, CENTER);
