@@ -90,9 +90,9 @@ function drawCard() {
   textSize(12);
   let volcanoID = selected.get("Volcano Number");
   if (volcanoID) {
-  text("ID: " + volcanoID, x + 50, y + 110);
+  text("ID: " + volcanoID, x + 50, y + 170);
 } else {
-  text("ID: Not available", x + 50, y + 110);
+  text("ID: Not available", x + 50, y + 170);
 }
 /* necessario per disegnare etichetta con tipologia vulcano
 - recupera la categoria, usa getTypeColor per ottenere il colore associato
