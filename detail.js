@@ -94,6 +94,7 @@ function drawCard() {
 } else {
   text("ID: Not available", x + 50, y + 100);
 }
+  
 /* necessario per disegnare etichetta con tipologia vulcano
 - recupera la categoria, usa getTypeColor per ottenere il colore associato
 e imposta rettangolo */
@@ -109,7 +110,6 @@ e imposta rettangolo */
   textSize(28);
   fill(255);
   text(selected.get("Volcano Name"), x + 50, 235);
-
 
   textSize(14);
   text("Lat: " + selected.get("Latitude") + " | Lon: " + selected.get("Longitude"), x + 50, 275);
@@ -199,7 +199,6 @@ function drawFallback() {
 
   link.position(x + 50, y + 30);
 }
-
 
 // definisce la funzione per associare colore specifico / categoria di vulcano
 function getTypeColor(type) {
