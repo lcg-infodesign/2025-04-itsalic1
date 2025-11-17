@@ -60,7 +60,7 @@ function setup() {
 
 /* se selected ESISTE - si va a recuperare il valore che, con typeColor, 
 viene restituito sotto forma di background color in base alla tipologia del vulcano.
-se selected NON ESISTE - viene impostato uno sfondo nero */
+se selected NON ESISTE - viene impostato uno sfondo nero con messaggio alert*/
 function draw() {
   if (selected) {
     let typeColor = getTypeColor(selected.get("TypeCategory"));
@@ -68,7 +68,8 @@ function draw() {
     drawCard();
   } else {
     background(30);
-  }
+    drawFallback();
+}
 }
 
 // funzione per definire la card con le informazioni
@@ -104,10 +105,11 @@ e imposta rettangolo */
   textAlign(CENTER, CENTER);
   text(selected.get("TypeCategory"), x + 130, 315);
   textAlign(LEFT, BASELINE);
-
+  
   textSize(28);
   fill(255);
   text(selected.get("Volcano Name"), x + 50, 235);
+
 
   textSize(14);
   text("Lat: " + selected.get("Latitude") + " | Lon: " + selected.get("Longitude"), x + 50, 275);
@@ -171,6 +173,33 @@ drawEruptionBar(x + w - 250, y + 160);
 // posizione del link per la mappa
 link.position(x + 50, y + 40);
 }
+
+/* funzione che mi permette di generare un messaggio in caso 
+di errore e ritornare alla mappa */
+function drawFallback() {
+  let w = 500;
+  let h = 200;
+  let x = (width - w) / 2;
+  let y = (height - h) / 2;
+
+  fill(0, 180);
+  stroke(255);
+  strokeWeight(2);
+  rect(x, y, w, h, 10);
+
+  noStroke();
+  fill(255);
+  textAlign(CENTER, CENTER);
+
+  textSize(24);
+  text("⚠️ Volcano not founded", x + w / 2, y + 80);
+
+  textSize(16);
+  text("Check the link or go back to the map.", x + w / 2, y + 120);
+
+  link.position(x + 50, y + 30);
+}
+
 
 // definisce la funzione per associare colore specifico / categoria di vulcano
 function getTypeColor(type) {
