@@ -105,7 +105,7 @@ e imposta rettangolo */
   text(selected.get("TypeCategory"), x + 130, 315);
   textAlign(LEFT, BASELINE);
 
-  textSize(30);
+  textSize(28);
   fill(255);
   text(selected.get("Volcano Name"), x + 50, 235);
 
@@ -166,7 +166,7 @@ function mouseMoved() {
 }
 
 // disegna la barra visiva legata all'attività del vulcano all'interno della card
-drawEruptionBar(x + w - 250, y + 120);
+drawEruptionBar(x + w - 250, y + 160);
 
 // posizione del link per la mappa
 link.position(x + 50, y + 40);
