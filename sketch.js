@@ -72,8 +72,8 @@ function draw() {
   noStroke();
   text("Volcanoes of the world", width / 2, 40);
   textSize(14)
-  text("Il presente dataset rappresenta una panoramica globale della distribuzione dei vulcani nel mondo.", width / 2, 80);
-  text("Ogni elemento del set di dati è georeferenziato tramite coordinate di latitudine e longitudine e possiede informazioni descrittive che vanno dal nome all'elevazione.", width / 2, 100)
+  text("Il presente dataset rappresenta la distribuzione dei vulcani nel mondo, partendo da una visione d'insieme sino ad arrivare al dettaglio.", width / 2, 80);
+  text("Ogni elemento è georeferenziato tramite coordinate di latitudine e longitudine e possiede informazioni descrittive che vanno dal nome sino all'ultima eruzione", width / 2, 100)
 
   /* ripristina l'allineamento del testo per gli elementi successivi 
   (etichette, tooltip) */

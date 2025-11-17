@@ -192,7 +192,7 @@ function drawFallback() {
   textAlign(CENTER, CENTER);
 
   textSize(24);
-  text("⚠️ Volcano not founded", x + w / 2, y + 80);
+  text("⚠️ Volcano not found", x + w / 2, y + 80);
 
   textSize(16);
   text("Check the link or go back to the map.", x + w / 2, y + 120);
